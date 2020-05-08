@@ -47,16 +47,16 @@ async function setETH1GoerliAccount() {
 async function postProvisioningRequest() {
   const endpoint = "/provisioning_requests/eth2";
   const attributes = {
-		"attributes":{
-		  "withdrawalKey": WITHDRAWAL_PUBLIC_KEY, 
-			"validators": [
-				{
-					"cloud": "amazon", 
-					"count": VALIDATOR_COUNT
-				}
-			]
-		}
+    "attributes":{
+      "withdrawalKey": WITHDRAWAL_PUBLIC_KEY, 
+      "validators": [
+        {
+	  "cloud": "amazon", 
+	  "count": VALIDATOR_COUNT
 	}
+      ]
+    }
+  }
   try {
     var response = await axios.post(STAKED_API_URL + endpoint, {
       params: {
