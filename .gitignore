@@ -1,0 +1,4 @@
+*.env
+shardwithdrawalkey*
+validatorprivatekey*
+**/node_modules
