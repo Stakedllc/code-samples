@@ -23,7 +23,7 @@ async function main() {
     try {
       const validators = await postProvisioningRequest();
       console.log(validators);
-      await submitBatchTransactions();
+      await submitBatchTransactions(validators);
     }catch(error) {
       console.log(error);
     }
