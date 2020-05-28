@@ -62,6 +62,8 @@ async function postProvisioningRequest() {
 }
 
 async function submitBatchTransactions(validators) {
+  console.log(validators);
+
   var pubkeys = [];
   var withdrawal_credentials = [];
   var signatures = [];
@@ -89,7 +91,7 @@ async function submitBatchTransactions(validators) {
       withdrawal_credentials,
       signatures,
       deposit_data_roots)
-      .send({ from: web3.eth.accounts.wallet[0].address, value: ether(web3.utils.toBN(32 * validators.length)), gasPrice: GAS_PRICE, gas: 7999999 });
+      .send({ from: web3.eth.accounts.wallet[0].address, value: ether(web3.utils.toBN(1 * validators.length)), gasPrice: GAS_PRICE, gas: 7999999 });
     console.log(tx);
   } catch (error) {
     console.log(error);
