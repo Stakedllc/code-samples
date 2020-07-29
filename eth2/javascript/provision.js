@@ -77,11 +77,6 @@ async function submitBatchTransactions(validators) {
     deposit_data_roots.push(decoded.deposit_data_root);
   }
 
-  console.log(pubkeys);
-  console.log(withdrawal_credentials);
-  console.log(signatures);
-  console.log(deposit_data_roots);
-
   const batchingABI = require("./build/contracts/BatchDeposit_Goerli.json").abi;
   const batchingContract = new web3.eth.Contract(batchingABI, BATCHING_CONTRACT_ADDR);
   try {
@@ -91,7 +86,7 @@ async function submitBatchTransactions(validators) {
       withdrawal_credentials,
       signatures,
       deposit_data_roots)
-      .send({ from: web3.eth.accounts.wallet[0].address, value: ether(web3.utils.toBN(1 * validators.length)), gasPrice: GAS_PRICE, gas: 7999999 });
+      .send({ from: web3.eth.accounts.wallet[0].address, value: ether(web3.utils.toBN(32 * validators.length)), gasPrice: GAS_PRICE, gas: 7999999 });
     console.log(tx);
   } catch (error) {
     console.log(error);
