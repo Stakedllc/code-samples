@@ -18,7 +18,9 @@ Goerli ETH is used to stake on the ETH2 testnet, which means a Goerli account is
 
 To generate a Goerli account, run the following command:
 
-``python3 goerli_account.py``
+```
+python3 goerli_account.py
+```
 
 This will print the associated address and private key; add these to your .env file. For >32 Goerli ETH to be sent to your account, please email sam@staked.us. 
 
@@ -92,6 +94,8 @@ Each staking transaction is decoded to create an array of input values to the ba
 
 To provision validators, run the following command:
 
-``python3 provision.py``
+```
+python3 provision.py
+```
 
 
