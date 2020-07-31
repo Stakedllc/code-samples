@@ -1,7 +1,5 @@
 # Provison ETH2 Validators
 
-Provision validators on Staked's secure cloud infrastructure with the ETH2 API.
-
 ## Getting Started
 
 ### Generate a Withdrawal Key
@@ -15,7 +13,7 @@ docker run -it -v "$PWD:/data" --network="host" gcr.io/prysmaticlabs/prysm/valid
 
 The above command will generate an ETH2 account and store it in your local filesystem. The withdrawal key information will be in a file titled ``shardwithdrawalkey{xyz...}``. Go ahead and drop it in the ``keys`` subfolder, open it, and copy the ``"publickey"`` value into your .env file.
 
-### Georli ETH
+### Goerli ETH
 Goerli ETH is used to stake on the ETH2 testnet, which means a Goerli account is required for testing.
 
 To generate a Goerli account, run the following command:
@@ -92,6 +90,8 @@ Each staking transaction is decoded to create an array of input values to the ba
 </tr>
 </table>
 
+To provision validators, run the following command:
 
+``python3 provision.py``
 
 
