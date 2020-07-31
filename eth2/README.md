@@ -1,13 +1,13 @@
 # Provison ETH2 Validators
 
-Navigate to the subfolder of your preferred language and let's spin up some validators!
+Follow along to spin up ETH2 validators!
 
 ## Getting Started
 
 ### Generate a Withdrawal Key
 An ETH2 withdrawal key is required before you can provision validators. The withdrawal key controls your stake on ETH2, and can be used for any number of validators.
 
-For the purposes of this walkthrough, we'll use the prysmatic labs validator image to generate a withdrawal key. First, you'll need [Docker installed](https://docs.docker.com/get-docker/), then head over to the command line, and run the following command:
+For the purposes of this walkthrough, we'll use the prysmatic labs validator image to generate a withdrawal key. First, you'll need [Docker](https://docs.docker.com/get-docker/) installed, then head over to the command line, and run the following command:
 
 ```
 docker run -it -v "$PWD:/data" --network="host" gcr.io/prysmaticlabs/prysm/validator:latest accounts create --keystore-path=/data --password=example
@@ -20,9 +20,7 @@ Goerli ETH is used to stake on the ETH2 testnet, so a Goerli account is required
 
 To generate a Goerli account, run the following command:
 
-python | javascript
------------- | -------------
-coming soon | npm run goerliAccount
+``python3 goerli_account.py``
 
 This will print the associated address and private key; add these to your .env file. Each validator requires 32 Goerli ETH. For >32 Goerli ETH, please email sam@staked.us. 
 
@@ -35,114 +33,64 @@ A POST request to [``/provisioning_requests/eth2``](https://staked.gitbook.io/st
 <table>
 <tr>
 <td>
-  python
-</td>
-<td>
-  javascript
+  <b>python</b>
 </td>
 </tr>
 <tr>
 <td>
   <pre lang="python">
-  # post_provisioning_request(validator_count) ...
-  endpoint = "/provisioning_requests/eth2"
-  params = {"api_key": os.environ["STAKED_API_KEY"]}
-  data = {
-      "attributes": {
-          "withdrawalKey": os.environ["WITHDRAWAL_PUBLIC_KEY"],
-          "validators": [{"cloud": "amazon", "count": validator_count}],
-      }
-  }
-  # ...
-  </pre>
-</td>
-<td>
-  <pre lang="javascript">
-  // postProvisioningRequest(validatorCount) ...
-  const endpoint = "/provisioning_requests/eth2";
-  const data = {
-    "attributes": {
-      "withdrawalKey": ETH2_PUBLIC_KEY,
-      "validators": [
-        {
-          "cloud": "amazon",
-          "count": validatorCount
+  def post_provisioning_request(validator_count):  # Step 1: Post Provisioning Request
+    endpoint = "/provisioning_requests/eth2"
+    params = {"api_key": os.environ["STAKED_API_KEY"]}
+    data = {
+        "attributes": {
+            "withdrawalKey": os.environ["WITHDRAWAL_PUBLIC_KEY"],
+            "validators": [{"cloud": "amazon", "count": validator_count}],
         }
-      ]
     }
-  }
-  // ...
+    return requests.post(eth2_url + endpoint, params=params, json=data)
   </pre>
 </td>
 </tr>
 <tr>
 <td>
-  source code
-</td>
-<td>
-  source code
+  <a href="https://github.com/Stakedllc/code-samples/blob/develop/eth2/python/provision.py#L12">source code</a>
 </td>
 </tr>
 </table>
 
 The response will include a staking transaction to sign for each provisioned validator. Rather than submit these transactions individually, they can be submited in one transaction with the [Staked Batching Contract](https://staked.gitbook.io/staked/staking-api/node-provisioning-api#submit-transactions-to-the-batching-contract).
 
-Each staking transaction from the previous response is decoded to create an array of input values to the batching contract. 
+Each staking transaction is decoded to create an array of input values to the batching contract. 
 
 <table>
 <tr>
 <td>
-  python
-</td>
-<td>
-  javascript
+  <b>python</b>
 </td>
 </tr>
 <tr>
 <td>
   <pre lang="python">
-  # post_provisioning_request(validator_count) ...
-  endpoint = "/provisioning_requests/eth2"
-  params = {"api_key": os.environ["STAKED_API_KEY"]}
-  data = {
-      "attributes": {
-          "withdrawalKey": os.environ["WITHDRAWAL_PUBLIC_KEY"],
-          "validators": [{"cloud": "amazon", "count": validator_count}],
-      }
-  }
-  # ...
-  </pre>
-</td>
-<td>
-  <pre lang="javascript">
-  // postProvisioningRequest(validatorCount) ...
-  const endpoint = "/provisioning_requests/eth2";
-  const data = {
-    "attributes": {
-      "withdrawalKey": ETH2_PUBLIC_KEY,
-      "validators": [
-        {
-          "cloud": "amazon",
-          "count": validatorCount
+  def post_provisioning_request(validator_count):  # Step 1: Post Provisioning Request
+    endpoint = "/provisioning_requests/eth2"
+    params = {"api_key": os.environ["STAKED_API_KEY"]}
+    data = {
+        "attributes": {
+            "withdrawalKey": os.environ["WITHDRAWAL_PUBLIC_KEY"],
+            "validators": [{"cloud": "amazon", "count": validator_count}],
         }
-      ]
     }
-  }
-  // ...
+    return requests.post(eth2_url + endpoint, params=params, json=data)
   </pre>
 </td>
 </tr>
 <tr>
 <td>
-  source code
-</td>
-<td>
-  source code
+  <a href="https://github.com/Stakedllc/code-samples/blob/develop/eth2/python/provision.py#L12">source code</a>
 </td>
 </tr>
 </table>
-
-
 
 
 
