@@ -8,7 +8,7 @@ An ETH2 withdrawal key is required before any provisioning can happen. The withd
 For the purposes of this walkthrough, we'll use the prysmatic labs validator image to generate a withdrawal key. First, you'll need [Docker](https://docs.docker.com/get-docker/) installed, then head over to the command line, and run the following command:
 
 ```
-docker run -it -v "$PWD:/data" --network="host" gcr.io/prysmaticlabs/prysm/validator:latest accounts create --keystore-path=/data --password=example
+$ docker run -it -v "$PWD:/data" --network="host" gcr.io/prysmaticlabs/prysm/validator:latest accounts create --keystore-path=/data --password=example
 ```
 
 The above command will generate an ETH2 account and store it in your local filesystem. The withdrawal key information will be in a file titled ``shardwithdrawalkey{xyz...}``. Go ahead and drop it in the ``keys`` subfolder, open it, and copy the ``"publickey"`` value into your .env file.
@@ -19,7 +19,7 @@ Goerli ETH is used to stake on the ETH2 testnet, which means a Goerli account is
 To generate a Goerli account, run the following command:
 
 ```
-python3 goerli_account.py
+$ python3 goerli_account.py
 ```
 
 This will print the associated address and private key; add these to your .env file. For >32 Goerli ETH to be sent to your account, please email sam@staked.us. 
@@ -95,7 +95,7 @@ Each staking transaction is decoded to create an array of input values to the ba
 To provision validators, run the following command:
 
 ```
-python3 provision.py
+$ python3 provision.py
 ```
 
 
