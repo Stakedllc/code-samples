@@ -16,13 +16,14 @@ The above command will generate an ETH2 account and store it in your local files
 ### Goerli ETH
 Goerli ETH is used to stake on the ETH2 testnet, which means a Goerli account is required for testing.
 
-To generate a Goerli account, run the following command:
+To generate a Goerli account, run the following commands:
 
 ```
-$ python3 goerli_account.py
+$ docker image build -t staked-eth2 .
+$ docker run --env-file .env staked-eth2 goerliAccount
 ```
 
-This will print the associated address and private key; add these to your .env file. For >32 Goerli ETH to be sent to your account, please email sam@staked.us. 
+This will print the associated address and private key; add and save these to your .env file. For Goerli ETH to be sent to your account, please email sam@staked.us. 
 
 ## Provision Validators
 
@@ -92,10 +93,11 @@ Each staking transaction is decoded to create an array of input values to the ba
 </tr>
 </table>
 
-To provision validators, run the following command:
+To provision validators, run the following commands:
 
 ```
-$ python3 provision.py
+$ docker image build -t staked-eth2 .
+$ docker run --env-file .env staked-eth2 provision
 ```
 
 
