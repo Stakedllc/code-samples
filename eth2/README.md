@@ -1,11 +1,11 @@
 # Provison ETH2 Validators
 
-Follow along to spin up ETH2 validators!
+Provision validators on Staked's secure cloud infrastructure with the ETH2 API.
 
 ## Getting Started
 
 ### Generate a Withdrawal Key
-An ETH2 withdrawal key is required before you can provision validators. The withdrawal key controls your stake on ETH2, and can be used for any number of validators.
+An ETH2 withdrawal key is required before any provisioning can happen. The withdrawal key controls stake on ETH2, and can be used for many validators.
 
 For the purposes of this walkthrough, we'll use the prysmatic labs validator image to generate a withdrawal key. First, you'll need [Docker](https://docs.docker.com/get-docker/) installed, then head over to the command line, and run the following command:
 
@@ -13,16 +13,16 @@ For the purposes of this walkthrough, we'll use the prysmatic labs validator ima
 docker run -it -v "$PWD:/data" --network="host" gcr.io/prysmaticlabs/prysm/validator:latest accounts create --keystore-path=/data --password=example
 ```
 
-The above command will generate an ETH2 account and store it in your local filesystem. The withdrawal key information will be in a generated file titled ``shardwithdrawalkey{xyz...}``. Go ahead and drop it in the ``keys`` subfolder, open it, and copy the ``"publickey"`` value into your .env file.
+The above command will generate an ETH2 account and store it in your local filesystem. The withdrawal key information will be in a file titled ``shardwithdrawalkey{xyz...}``. Go ahead and drop it in the ``keys`` subfolder, open it, and copy the ``"publickey"`` value into your .env file.
 
 ### Georli ETH
-Goerli ETH is used to stake on the ETH2 testnet, so a Goerli account is required for testing.
+Goerli ETH is used to stake on the ETH2 testnet, which means a Goerli account is required for testing.
 
 To generate a Goerli account, run the following command:
 
 ``python3 goerli_account.py``
 
-This will print the associated address and private key; add these to your .env file. Each validator requires 32 Goerli ETH. For >32 Goerli ETH, please email sam@staked.us. 
+This will print the associated address and private key; add these to your .env file. For >32 Goerli ETH to be sent to your account, please email sam@staked.us. 
 
 ## Provision Validators
 
