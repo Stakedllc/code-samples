@@ -1,3 +1,0 @@
-# pip freeze export
-web3==5.11.0
-python-dotenv
