@@ -112,7 +112,7 @@ Each staking transaction is decoded to create an array of input values to the ba
 </tr>
 </table>
 
-To provision validators, using the process detailed above, run the following commands:
+To provision validators, using the process detailed above, run the following commands (note, make sure the .env file has all fields filled):
 
 ```
 $ docker image build -t staked-eth2 .
