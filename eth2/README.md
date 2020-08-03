@@ -25,7 +25,9 @@ $ docker image build -t staked-eth2 .
 $ docker run --env-file .env staked-eth2 goerliAccount
 ```
 
-This will print the associated address and private key; add and save these to your .env file. Please email sam@staked.us with your address and he will send Goerli ETH for testing. 
+This will print the associated address and private key; add and save these to your .env file. Next, the address needs to be funded.
+
+The [ETH Staker discord](https://discord.gg/eAuDepM) faucet channel can provide 33 Goerli ETH to your address, allowing for the provisioning of one validator. To procure Goerli ETH for more than one validator (recommended), please email sam@staked.us with your Goerli address. 
 
 ## Provision Validators
 
