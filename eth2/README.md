@@ -27,7 +27,13 @@ $ docker run --env-file .env staked-eth2 goerliAccount
 
 This will print the associated address and private key; add and save these to your .env file. Next, the address needs to be funded.
 
-The ETH Staker discord ([invite](https://discord.gg/eAuDepM)) faucet channel can provide 33 Goerli ETH to your address. To procure Goerli ETH for more than one validator (recommended), please email sam@staked.us with your Goerli address. 
+The ETH Staker discord ([invite](https://discord.gg/eAuDepM)) is a fantastic resource for testing on Medalla. Select the #request-goerli-eth faucet channel and enter the following message into the chat:
+
+```
+!goerliEth {YOUR GOERLI ADDRESS} 5
+```
+
+The faucet will send the Goerli ETH required for 5 validators plus gas costs. For additional Goerli ETH, or support, please email sam@staked.us.
 
 ## Provision Validators
 
@@ -36,11 +42,6 @@ With the withdrawal key generated, and an account that holds > 32 Goerli ETH, it
 A POST request to [``/provisioning_requests/eth2``](https://staked.gitbook.io/staked/staking-api/node-provisioning-api#post-provisioning-request) will provision Medalla validators. The .env file is used to configure the validator count for our example scripts, and is set to 2 by default.
 
 <table>
-<tr>
-<td>
-  <b>python</b>
-</td>
-</tr>
 <tr>
 <td>
   <pre lang="python">
@@ -69,11 +70,6 @@ The response will include a staking transaction to sign for each provisioned val
 Each staking transaction is decoded to create an array of input values to the batching contract. 
 
 <table>
-<tr>
-<td>
-  <b>python</b>
-</td>
-</tr>
 <tr>
 <td>
   <pre lang="python">
