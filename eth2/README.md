@@ -1,4 +1,4 @@
-# Provison ETH2 Validators
+# Provision ETH2 Validators
 
 Programmatically provision ETH2 validators on the multi-client testnet [Medalla](https://github.com/goerli/medalla/blob/master/medalla/README.md)
 
@@ -98,10 +98,10 @@ Each staking transaction is decoded to create an array of input values to the ba
         deposit_data_roots.append(decoded.deposit_data_root)
     with open("./build/contracts/BatchDeposit_Goerli.json") as abi:
         batching_abi = json.load(abi)
-        batching_contract = web3.eth.contract(address="0x8044f3513E32701908C3E8F745b507E619F5a519", abi=batching_abi)
+        batching_contract = web3.eth.contract(address="0xD3e5AA84e0E6f4247B3609F88ff157c258E1fE89", abi=batching_abi)
         tx_hash = batching_contract.functions.batchDeposit(
             pubkeys, withdrawal_credentials, signatures, deposit_data_roots
-        ).transact()
+        ).transact({"value": 32 * 10 ** 18})
   </pre>
 </td>
 </tr>
