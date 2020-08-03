@@ -1,6 +1,6 @@
 # Provison ETH2 Validators
 
-Programmatically provision ETH2 validators on the multi-client testnet [Medalla](https://github.com/goerli/medalla/blob/master/medalla/README.md)!
+Programmatically provision ETH2 validators on the multi-client testnet [Medalla](https://github.com/goerli/medalla/blob/master/medalla/README.md)
 
 ## Getting Started
 
