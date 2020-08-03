@@ -1,5 +1,7 @@
 # Provison ETH2 Validators
 
+Provision ETH2 validators on the "official" multi-client testnet [Medalla](https://github.com/goerli/medalla/blob/master/medalla/README.md)!
+
 ## Getting Started
 
 ### Generate a Withdrawal Key
@@ -23,11 +25,11 @@ $ docker image build -t staked-eth2 .
 $ docker run --env-file .env staked-eth2 goerliAccount
 ```
 
-This will print the associated address and private key; add and save these to your .env file. For Goerli ETH to be sent to your account, please email sam@staked.us. 
+This will print the associated address and private key; add and save these to your .env file. Please email sam@staked.us with your address and we will send Goerli ETH for testing. 
 
 ## Provision Validators
 
-With the ETH2 withdrawal key generated, and an account that holds > 32 Goerli ETH, it's time to provision ETH2 testnet validators! 
+With the withdrawal key generated, and an account that holds > 32 Goerli ETH, it's time to provision ETH2 testnet validators! 
 
 A POST request to [``/provisioning_requests/eth2``](https://staked.gitbook.io/staked/staking-api/node-provisioning-api#post-provisioning-request) will provision as many validators as we specify. The .env file is used to configure the validator count for our example scripts, and is set to 2 by default.
 
