@@ -101,7 +101,7 @@ Each staking transaction is decoded to create an array of input values to the ba
         batching_contract = web3.eth.contract(address="0xD3e5AA84e0E6f4247B3609F88ff157c258E1fE89", abi=batching_abi)
         tx_hash = batching_contract.functions.batchDeposit(
             pubkeys, withdrawal_credentials, signatures, deposit_data_roots
-        ).transact({"value": 32 * 10 ** 18})
+        ).transact({"value": validators.length * 32 * 10 ** 18})
   </pre>
 </td>
 </tr>
