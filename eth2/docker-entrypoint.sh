@@ -4,12 +4,12 @@ action=$2
 
 case $action in
 
-  goerliAccount)
-    exec npm run goerliAccount
+  account)
+    exec npm run account
   ;;
 
   provision)
-    exec python3 provision.py
+    exec npm run provision
   ;;
 
   *)

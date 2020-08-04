@@ -8,7 +8,7 @@ const {
 
 const web3 = new Web3(GOERLI_RPC_URL);
 
-module.exports.setETH1GoerliAccount = async function () {
+module.exports.setAccount = async function () {
   const account = await web3.eth.accounts.create(web3.utils.randomHex(32));
   console.log(account);
 }
