@@ -57,7 +57,8 @@ async function submitBatchTransactions(validators) {
     }
 
     const batching_abi = require("./BatchDeposit.json");
-    const batching_contract = new web3.eth.Contract(batching_abi, "0xD3e5AA84e0E6f4247B3609F88ff157c258E1fE89");
+    const batching_address = "0xD3e5AA84e0E6f4247B3609F88ff157c258E1fE89"
+    const batching_contract = new web3.eth.Contract(batching_abi, batching_address);
     try {
         const ether = n => new web3.utils.BN(web3.utils.toWei(n, "ether"));
         const gas_price = await web3.eth.getGasPrice();
