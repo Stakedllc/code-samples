@@ -75,12 +75,14 @@ VALIDATOR_COUNT=2
 ```
 
 
-To provision validators, as illustrated in javascript below, run the following commands:
+To provision validators, run the following commands:
 
 ```
 $ docker image build -t staked-eth2 .
 $ docker run --env-file .env staked-eth2 provision
 ```
+
+Below is the javascript magic running in the Docker container:
 
 <table>
 <tr>
