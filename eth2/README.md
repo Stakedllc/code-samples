@@ -1,13 +1,15 @@
-# Provision ETH2 Validators
+# ETH2
 
-Programmatically provision ETH2 validators on the multi-client testnet [Medalla](https://github.com/goerli/medalla/blob/master/medalla/README.md)
+Provision ETH2 validators on Staked's secure cloud infrastructure.
 
 ## Getting Started
 
-### Generate a Withdrawal Key
-An ETH2 withdrawal key is required to provision validators. The withdrawal key controls stake on ETH2, and can be used for many validators.
+First thing's first, clone this repo and navigate to the ETH2 folder.
 
-For the purposes of this walkthrough, we'll use the prysmatic labs validator image to generate a withdrawal key. First, you'll need [Docker](https://docs.docker.com/get-docker/) installed, then head over to the command line, and run the following command:
+### Generate a Withdrawal Key
+An ETH2 withdrawal key is required to control stake on ETH2, and can be used for many validators.
+
+For the purposes of this walkthrough, we'll use the prysmatic labs validator image to generate a withdrawal key. You'll need [Docker](https://docs.docker.com/get-docker/) installed, then head over to the command line, and run the following command:
 
 ```
 $ docker run -it -v "$PWD:/data" --network="host" gcr.io/prysmaticlabs/prysm/validator:latest accounts create --keystore-path=/data --password=example
@@ -21,7 +23,7 @@ WITHDRAWAL_PUBLIC_KEY={YOUR WITHDRAWAL PUBLIC KEY}
 ```
 
 ### Goerli ETH
-Goerli ETH is the staking asset on Medalla, which means a Goerli account is required for testing. A Goerli provider URL should be added to your .env file to broadcast transactions and interact with the network.
+Goerli ETH is the staking asset on [Medalla](https://github.com/goerli/medalla/blob/master/medalla/README.md), which means a Goerli account is required for testing. A Goerli provider URL should be added to your .env file to broadcast transactions and interact with the network.
 
 ```
 // .env
