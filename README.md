@@ -18,7 +18,7 @@ For the purposes of this walkthrough, we'll use the prysmatic labs validator ima
 $ docker run -it -v "$PWD:/data" --network="host" gcr.io/prysmaticlabs/prysm/validator:latest accounts create --keystore-path=/data --password=example
 ```
 
-The above command will generate an ETH2 account and store it in your local filesystem. The withdrawal key will be in a file titled ``shardwithdrawalkey{xyz...}``. Go ahead and drop it in the ``keys`` subfolder, and copy the ``"publickey"`` value into your .env file.
+The above command will generate an ETH2 account and store it in your local filesystem. The withdrawal key will be in a file titled ``shardwithdrawalkey{xyz...}``. Go ahead and drop it in the ``data`` subfolder, and copy the ``"publickey"`` value into your .env file.
 
 ```
 // .env
