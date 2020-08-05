@@ -1,4 +1,4 @@
-FROM nikolaik/python-nodejs:latest
+FROM node:latest
 
 COPY package.json .
 RUN npm install

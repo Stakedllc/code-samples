@@ -1,20 +1,13 @@
-require("dotenv").config()
-
 const axios = require("axios");
 const Web3 = require("web3");
 
 const {
-    STAKED_ETH_URL,
     STAKED_API_KEY,
-    GOERLI_RPC_URL,
+    VALIDATOR_COUNT,
     WITHDRAWAL_PUBLIC_KEY,
+    GOERLI_RPC_URL,
     GOERLI_PRIVATE_KEY,
 } = process.env;
-
-// Set-Up Axios Instance
-const instance = axios.create({
-    baseURL: STAKED_ETH_URL
-});
 
 // Set-Up Web3
 const web3 = new Web3(GOERLI_RPC_URL);
@@ -24,15 +17,22 @@ web3.eth.accounts.wallet.add(account);
 // Step 1: Post Provisioning Request
 async function postProvisioningRequest() {
     try {
-        var response = await instance.post(`/provisioning_requests/eth2?api_key=${STAKED_API_KEY}`, {
-            attributes: {
-                "withdrawalKey": WITHDRAWAL_PUBLIC_KEY,
-                "validators": [
-                    {
-                        "cloud": "amazon",
-                        "count": 2
-                    }
-                ]
+        let response = await axios({
+            method: 'post',
+            url: "https://eth2.staging.staked.cloud/api/provisioning_requests/eth2",
+            params: {
+                api_key: STAKED_API_KEY
+            },
+            data: {
+                attributes: {
+                    "withdrawalKey": WITHDRAWAL_PUBLIC_KEY,
+                    "validators": [
+                        {
+                            "provider": "decentralized",
+                            "count": Number(VALIDATOR_COUNT)
+                        }
+                    ]
+                }
             }
         });
         return response.data.attributes.validators;
@@ -61,13 +61,19 @@ async function submitBatchTransactions(validators) {
     try {
         const ether = n => new web3.utils.BN(web3.utils.toWei(n, "ether"));
         const gas_price = await web3.eth.getGasPrice();
+        const gas_price_scalar = 2
         const tx = await batching_contract.methods.batchDeposit(
             pubkeys,
             withdrawal_credentials,
             signatures,
             deposit_data_roots)
-            .send({ from: web3.eth.accounts.wallet[0].address, value: ether(web3.utils.toBN(32 * validators.length)), gasPrice: gas_price, gas: 7999999 });
-        console.log(tx);
+            .send({
+                from: web3.eth.accounts.wallet[0].address,
+                value: ether(web3.utils.toBN(32 * validators.length)),
+                gasPrice: gas_price * gas_price_scalar,
+                gas: 7999999
+            });
+        return tx;
     } catch (error) {
         console.log(error);
     }
@@ -94,8 +100,11 @@ function decodeDepositInput(validator_tx) {
 
 module.exports.provision = async function () {
     try {
+        console.log("provisioning validators...")
         const validators = await postProvisioningRequest();
-        await submitBatchTransactions(validators);
+        console.log("sending batched deposit transaction... (this may take a minute to confirm)")
+        const tx = await submitBatchTransactions(validators);
+        console.log("etherscan link:", `https://goerli.etherscan.io/tx/${tx.transactionHash}`)
     } catch (error) {
         console.log(error);
     }
