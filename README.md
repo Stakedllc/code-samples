@@ -15,7 +15,7 @@ An ETH2 withdrawal key is required to control stake on ETH2, and can be used for
 For the purposes of this walkthrough, we'll use the prysmatic labs validator image to generate a withdrawal key. [Docker](https://docs.docker.com/get-docker/) needs to be installed, then run the following command:
 
 ```
-$ docker run -it -v "$PWD:/keys" --network="host" gcr.io/prysmaticlabs/prysm/validator:latest accounts create --keystore-path=/data --password=example
+$ docker run -it -v "$PWD:/keys" --network="host" gcr.io/prysmaticlabs/prysm/validator:latest accounts create --keystore-path=/keys --password=example
 ```
 
 The above command will generate an ETH2 account and store it in your local filesystem. The withdrawal key will be in a file titled ``shardwithdrawalkey{xyz...}``. Go ahead and drop it in the ``keys`` subfolder, and copy the ``"publickey"`` value into your .env file.
