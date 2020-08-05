@@ -22,12 +22,12 @@ To generate a Goerli account, run the following commands:
 
 ```
 $ docker image build -t staked-eth2 .
-$ docker run --env-file .env staked-eth2 goerliAccount
+$ docker run --env-file .env staked-eth2 account
 ```
 
 This will print the associated address and private key; add and save these to your .env file. Next, the address needs to be funded.
 
-The ETH Staker discord ([invite](https://discord.gg/eAuDepM)) is a fantastic resource for testing on Medalla. Select the #request-goerli-eth faucet channel and enter the following message into the chat:
+The ETH Staker discord ([link](https://discord.gg/eAuDepM)) is a fantastic resource for testing on Medalla. Select the #request-goerli-eth faucet channel and enter the following message into the chat:
 
 ```
 !goerliEth {YOUR GOERLI ADDRESS} 5
@@ -44,17 +44,33 @@ A POST request to [``/provisioning_requests/eth2``](https://staked.gitbook.io/st
 <table>
 <tr>
 <td>
-  <pre lang="python">
-  def post_provisioning_request(validator_count):  # Step 1: Post Provisioning Request
-    endpoint = "/provisioning_requests/eth2"
-    params = {"api_key": os.environ["STAKED_API_KEY"]}
-    data = {
-        "attributes": {
-            "withdrawalKey": os.environ["WITHDRAWAL_PUBLIC_KEY"],
-            "validators": [{"cloud": "amazon", "count": validator_count}],
-        }
+  <pre lang="javascript">
+// Step 1: Post Provisioning Request
+async function postProvisioningRequest() {
+    try {
+        let response = await axios({
+            method: 'post',
+            url: "https://eth2.staging.staked.cloud/api/provisioning_requests/eth2",
+            params: {
+                api_key: STAKED_API_KEY
+            },
+            data: {
+                attributes: {
+                    "withdrawalKey": WITHDRAWAL_PUBLIC_KEY,
+                    "validators": [
+                        {
+                            "provider": "decentralized",
+                            "count": Number(VALIDATOR_COUNT)
+                        }
+                    ]
+                }
+            }
+        });
+        return response.data.attributes.validators;
+    } catch (error) {
+        throw error;
     }
-    return requests.post(eth2_url + endpoint, params=params, json=data)
+}
   </pre>
 </td>
 </tr>
@@ -72,34 +88,43 @@ Each staking transaction is decoded to create an array of input values to the ba
 <table>
 <tr>
 <td>
-  <pre lang="python">
-  def batch_transactions(validators):  # Step 2: Batch Staking Transactions
-    pubkeys = []
-    withdrawal_credentials = []
-    signatures = []
-    deposit_data_roots = []
-    def decode(validator_tx):
-        return web3.eth.abi.decodeParameters(
-            [
-                {"type": "bytes", "name": "pubkey"},
-                {"type": "bytes", "name": "withdrawal_credentials"},
-                {"type": "bytes", "name": "signature"},
-                {"type": "bytes32", "name": "deposit_data_root"},
-            ],
-            "0x" + validator_tx.substring(8),
-        )
-    for i in range(validators.length):
-        decoded = decode(validators[i].depositInput)
-        pubkeys.append(decoded.pubkey)
-        withdrawal_credentials.append(decoded.withdrawal_credentials)
-        signatures.append(decoded.signature)
-        deposit_data_roots.append(decoded.deposit_data_root)
-    with open("./build/contracts/BatchDeposit_Goerli.json") as abi:
-        batching_abi = json.load(abi)
-        batching_contract = web3.eth.contract(address="0xD3e5AA84e0E6f4247B3609F88ff157c258E1fE89", abi=batching_abi)
-        tx_hash = batching_contract.functions.batchDeposit(
-            pubkeys, withdrawal_credentials, signatures, deposit_data_roots
-        ).transact({"value": validators.length * 32 * 10 ** 18})
+  <pre lang="javascript">
+// Step 2: Batch Staking Transactions
+async function submitBatchTransactions(validators) {
+    var pubkeys = [];
+    var withdrawal_credentials = [];
+    var signatures = [];
+    var deposit_data_roots = [];
+    for (let i = 0; i < validators.length; i++) {
+        let decoded = decodeDepositInput(validators[i].depositInput);
+        pubkeys.push(decoded.pubkey);
+        withdrawal_credentials.push(decoded.withdrawal_credentials);
+        signatures.push(decoded.signature);
+        deposit_data_roots.push(decoded.deposit_data_root);
+    }
+    const batching_abi = require("./BatchDeposit.json");
+    const batching_address = "0xD3e5AA84e0E6f4247B3609F88ff157c258E1fE89"
+    const batching_contract = new web3.eth.Contract(batching_abi, batching_address);
+    try {
+        const ether = n => new web3.utils.BN(web3.utils.toWei(n, "ether"));
+        const gas_price = await web3.eth.getGasPrice();
+        const gas_price_scalar = 2
+        const tx = await batching_contract.methods.batchDeposit(
+            pubkeys,
+            withdrawal_credentials,
+            signatures,
+            deposit_data_roots)
+            .send({
+                from: web3.eth.accounts.wallet[0].address,
+                value: ether(web3.utils.toBN(32 * validators.length)),
+                gasPrice: gas_price * gas_price_scalar,
+                gas: 7999999
+            });
+        return tx;
+    } catch (error) {
+        console.log(error);
+    }
+}
   </pre>
 </td>
 </tr>
