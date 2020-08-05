@@ -47,13 +47,13 @@ GOERLI_PRIVATE_KEY={YOUR GOERLI PRIVATE KEY}
 
 Next, the address needs to be funded.
 
-The ETH Staker discord ([link](https://discord.gg/eAuDepM)) is fantastic for Medalla testing resources. Select the #request-goerli-eth faucet channel and enter the following message into the chat:
+The ETH Staker discord ([link](https://discord.gg/eAuDepM)) is a fantastic for Medalla testing resource. Select the #request-goerli-eth faucet channel and enter the following message into the chat:
 
 ```
 !goerliEth {YOUR GOERLI ADDRESS} 5
 ```
 
-The faucet will send the Goerli ETH required for 5 validators plus gas costs. For additional Goerli ETH or questions please email sam@staked.us.
+The faucet will send enough Goerli ETH for 5 validators plus gas costs. For additional Goerli ETH or questions please email sam@staked.us.
 
 ## Provision Validators
 
@@ -70,6 +70,16 @@ A POST request to [``/provisioning_requests/eth2``](https://staked.gitbook.io/st
 // .env
 VALIDATOR_COUNT=2
 ```
+
+
+To provision validators, run the following commands:
+
+```
+$ docker image build -t staked-eth2 .
+$ docker run --env-file .env staked-eth2 provision
+```
+
+Below is the javascript magic running in the Docker container:
 
 <table>
 <tr>
@@ -164,10 +174,3 @@ async function submitBatchTransactions(validators) {
 </td>
 </tr>
 </table>
-
-To provision validators, as shown above, run the following commands:
-
-```
-$ docker image build -t staked-eth2 .
-$ docker run --env-file .env staked-eth2 provision
-```
