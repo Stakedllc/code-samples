@@ -74,6 +74,14 @@ A POST request to [``/provisioning_requests/eth2``](https://staked.gitbook.io/st
 VALIDATOR_COUNT=2
 ```
 
+
+To provision validators, as illustrated in javascript below, run the following commands:
+
+```
+$ docker image build -t staked-eth2 .
+$ docker run --env-file .env staked-eth2 provision
+```
+
 <table>
 <tr>
 <td>
@@ -167,10 +175,3 @@ async function submitBatchTransactions(validators) {
 </td>
 </tr>
 </table>
-
-To provision validators, as shown above, run the following commands:
-
-```
-$ docker image build -t staked-eth2 .
-$ docker run --env-file .env staked-eth2 provision
-```
