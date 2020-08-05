@@ -109,7 +109,7 @@ async function postProvisioningRequest() {
 </tr>
 <tr>
 <td>
-  <a href="https://github.com/Stakedllc/code-samples/blob/develop/eth2/python/provision.py#L12">source code</a>
+  <a href="https://github.com/Stakedllc/code-samples/blob/master/eth2/provision.js#L17">source code</a>
 </td>
 </tr>
 </table>
@@ -163,7 +163,7 @@ async function submitBatchTransactions(validators) {
 </tr>
 <tr>
 <td>
-  <a href="https://github.com/Stakedllc/code-samples/blob/develop/eth2/python/provision.py#L12">source code</a>
+  <a href="https://github.com/Stakedllc/code-samples/blob/master/eth2/provision.js#L44">source code</a>
 </td>
 </tr>
 </table>
