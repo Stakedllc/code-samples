@@ -18,7 +18,7 @@ For the purposes of this walkthrough, we'll use the prysmatic labs validator ima
 $ docker run -it -v "$PWD:/data" --network="host" gcr.io/prysmaticlabs/prysm/validator:latest accounts create --keystore-path=/data --password=example
 ```
 
-The above command will generate an ETH2 account and store it in your local filesystem. The withdrawal key information will be in a file titled ``shardwithdrawalkey{xyz...}``. Go ahead and drop it in the ``keys`` subfolder, open it, and copy the ``"publickey"`` value into your .env file.
+The above command will generate an ETH2 account and store it in your local filesystem. The withdrawal key will be in a file titled ``shardwithdrawalkey{xyz...}``. Go ahead and drop it in the ``keys`` subfolder, and copy the ``"publickey"`` value into your .env file.
 
 ```
 // .env
@@ -26,7 +26,7 @@ WITHDRAWAL_PUBLIC_KEY={YOUR WITHDRAWAL PUBLIC KEY}
 ```
 
 ### Goerli ETH
-Goerli ETH is the staking asset on [Medalla](https://github.com/goerli/medalla/blob/master/medalla/README.md), which means a Goerli account is required for testing. A Goerli provider URL should be added to your .env file to broadcast transactions and interact with the network.
+Goerli ETH is the staking asset on [Medalla](https://github.com/goerli/medalla/blob/master/medalla/README.md), which means a Goerli account is required for testing and a Goerli provider URL is needed to interact with the network.
 
 ```
 // .env
@@ -50,19 +50,17 @@ GOERLI_PRIVATE_KEY={YOUR GOERLI PRIVATE KEY}
 
 Next, the address needs to be funded.
 
-The ETH Staker discord ([link](https://discord.gg/eAuDepM)) is a fantastic resource for testing on Medalla. Select the #request-goerli-eth faucet channel and enter the following message into the chat:
+The ETH Staker discord ([link](https://discord.gg/eAuDepM)) is fantastic for Medalla testing resources. Select the #request-goerli-eth faucet channel and enter the following message into the chat:
 
 ```
 !goerliEth {YOUR GOERLI ADDRESS} 5
 ```
 
-The faucet will send the Goerli ETH required for 5 validators plus gas costs. For additional Goerli ETH, or support, please email sam@staked.us.
+The faucet will send the Goerli ETH required for 5 validators plus gas costs. For additional Goerli ETH or questions please email sam@staked.us.
 
 ## Provision Validators
 
-With the withdrawal key generated, and an account that holds > 32 Goerli ETH, it's time to provision ETH2 testnet validators! 
-
-An API key with special permission is required to use the Staked ETH2 API, if you don't have one already please email sam@staked.us. If you have an API Key, enter it into your .env file.
+An API key with ETH2 permissions is required to provision validators - please email sam@staked.us for an API key with access.
 
 ```
 // .env
@@ -70,6 +68,11 @@ STAKED_API_KEY={YOUR STAKED API KEY}
 ```
 
 A POST request to [``/provisioning_requests/eth2``](https://staked.gitbook.io/staked/staking-api/node-provisioning-api#post-provisioning-request) will provision Medalla validators. The .env file is used to configure the validator count for our example scripts, and is set to 2 by default.
+
+```
+// .env
+VALIDATOR_COUNT=2
+```
 
 <table>
 <tr>
