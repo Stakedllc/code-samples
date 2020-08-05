@@ -1,16 +1,16 @@
 {
-  "name": "node-provisioning-eth2",
+  "name": "staked-eth2",
   "version": "1.0.0",
-  "description": "",
+  "description": "Provision ETH2 validators on Staked's cloud infrastructure.",
   "main": "provision.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "account": "node -e 'require(\"./account.js\").create()'",
+    "provision": "node -e 'require(\"./provision.js\").provision()'"
   },
-  "author": "",
+  "author": "sam@staked.us",
   "license": "ISC",
   "dependencies": {
-    "axios": "^0.19.2",
-    "dotenv": "^8.2.0",
+    "axios": "^0.19.0",
     "web3": "^1.2.7"
   }
 }
