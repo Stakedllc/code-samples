@@ -15,8 +15,18 @@ $ docker run -it -v "$PWD:/data" --network="host" gcr.io/prysmaticlabs/prysm/val
 
 The above command will generate an ETH2 account and store it in your local filesystem. The withdrawal key information will be in a file titled ``shardwithdrawalkey{xyz...}``. Go ahead and drop it in the ``keys`` subfolder, open it, and copy the ``"publickey"`` value into your .env file.
 
+```
+// .env
+WITHDRAWAL_PUBLIC_KEY={YOUR WITHDRAWAL PUBLIC KEY}
+```
+
 ### Goerli ETH
-Goerli ETH is the staking asset on Medalla, which means a Goerli account is required for testing.
+Goerli ETH is the staking asset on Medalla, which means a Goerli account is required for testing. A Goerli provider URL should be added to your .env file to broadcast transactions and interact with the network.
+
+```
+// .env
+GOERLI_RPC_URL={YOUR GOERLI PROVIDER HTTP URL}
+```
 
 To generate a Goerli account, run the following commands:
 
@@ -25,7 +35,15 @@ $ docker image build -t staked-eth2 .
 $ docker run --env-file .env staked-eth2 account
 ```
 
-This will print the associated address and private key; add and save these to your .env file. Next, the address needs to be funded.
+This will print the associated address and private key; add and save these to your .env file.
+
+```
+// .env
+GOERLI_ADDRESS={YOUR GOERLI ADDRESS}
+GOERLI_PRIVATE_KEY={YOUR GOERLI PRIVATE KEY}
+```
+
+Next, the address needs to be funded.
 
 The ETH Staker discord ([link](https://discord.gg/eAuDepM)) is a fantastic resource for testing on Medalla. Select the #request-goerli-eth faucet channel and enter the following message into the chat:
 
@@ -38,6 +56,13 @@ The faucet will send the Goerli ETH required for 5 validators plus gas costs. Fo
 ## Provision Validators
 
 With the withdrawal key generated, and an account that holds > 32 Goerli ETH, it's time to provision ETH2 testnet validators! 
+
+An API key with special permission is required to use the Staked ETH2 API, if you don't have one already please email sam@staked.us. If you have an API Key, enter it into your .env file.
+
+```
+// .env
+STAKED_API_KEY={YOUR STAKED API KEY}
+```
 
 A POST request to [``/provisioning_requests/eth2``](https://staked.gitbook.io/staked/staking-api/node-provisioning-api#post-provisioning-request) will provision Medalla validators. The .env file is used to configure the validator count for our example scripts, and is set to 2 by default.
 
@@ -135,7 +160,7 @@ async function submitBatchTransactions(validators) {
 </tr>
 </table>
 
-To provision validators, using the process detailed above, run the following commands (make sure the .env file has all fields filled in):
+To provision validators, run the following commands:
 
 ```
 $ docker image build -t staked-eth2 .
