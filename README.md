@@ -114,9 +114,9 @@ async function postProvisioningRequest() {
 </tr>
 </table>
 
-The response will include a staking transaction to sign for each provisioned validator. Rather than submit these transactions individually, they can be submited in one transaction with the [Staked Batching Contract](https://staked.gitbook.io/staked/staking-api/node-provisioning-api#submit-transactions-to-the-batching-contract).
+The response will include a deposit transaction to sign for each provisioned validator. Rather than submit these transactions individually, they can be submited in one transaction with the [Staked Batching Contract](https://staked.gitbook.io/staked/staking-api/node-provisioning-api#submit-transactions-to-the-batching-contract).
 
-Each staking transaction is decoded to create an array of input values to the batching contract. 
+Each deposit transaction is decoded to create an array of input values to the batching contract. 
 
 <table>
 <tr>
@@ -168,7 +168,7 @@ async function submitBatchTransactions(validators) {
 </tr>
 </table>
 
-To provision validators, run the following commands:
+To provision validators, as shown above, run the following commands:
 
 ```
 $ docker image build -t staked-eth2 .
