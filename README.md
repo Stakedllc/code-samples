@@ -26,7 +26,7 @@ WITHDRAWAL_PUBLIC_KEY={YOUR WITHDRAWAL PUBLIC KEY}
 ```
 
 ### Goerli ETH
-Goerli ETH is the staking asset on [Medalla](https://github.com/goerli/medalla/blob/master/medalla/README.md), which means a Goerli account is required for testing and a Goerli provider URL is needed to interact with the network.
+Goerli ETH is the staking asset on [Medalla](https://github.com/goerli/medalla/blob/master/medalla/README.md), which means a Goerli account is required for testing and a provider URL is needed to interact with the network.
 
 ```
 // .env
@@ -50,7 +50,7 @@ GOERLI_PRIVATE_KEY={YOUR GOERLI PRIVATE KEY}
 
 Next, the address needs to be funded.
 
-The ETH Staker discord ([link](https://discord.gg/eAuDepM)) is a fantastic for Medalla testing resource. Select the #request-goerli-eth faucet channel and enter the following message into the chat:
+The ETH Staker discord ([link](https://discord.gg/eAuDepM)) is a fantastic Medalla testing resource. Select the #request-goerli-eth faucet channel and enter the following message into the chat:
 
 ```
 !goerliEth {YOUR GOERLI ADDRESS} 5
