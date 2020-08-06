@@ -26,12 +26,7 @@ WITHDRAWAL_PUBLIC_KEY={YOUR WITHDRAWAL PUBLIC KEY}
 ```
 
 ### Goerli ETH
-Goerli ETH is the staking asset on [Medalla](https://github.com/goerli/medalla/blob/master/medalla/README.md), which means a Goerli account is required for testing and a provider URL is needed to interact with the network.
-
-```
-// .env
-GOERLI_RPC_URL={YOUR GOERLI PROVIDER HTTP URL}
-```
+Goerli ETH is the staking asset on [Medalla](https://github.com/goerli/medalla/blob/master/medalla/README.md), which means a Goerli account is required for testing. We've provided a testing Goerli provider URL in the .env file - replace it with another provider if desired. 
 
 To generate a Goerli account, run the following commands:
 
