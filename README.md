@@ -15,10 +15,10 @@ An ETH2 withdrawal key is required to control stake on ETH2, and can be used for
 For the purposes of this walkthrough, we'll use the prysmatic labs validator image to generate a withdrawal key. [Docker](https://docs.docker.com/get-docker/) needs to be installed, then run the following command:
 
 ```
-$ docker run -it -v "$PWD:/data" --network="host" gcr.io/prysmaticlabs/prysm/validator:latest accounts create --keystore-path=/data --password=example
+$ docker run -it -v "$PWD:/keys" --network="host" gcr.io/prysmaticlabs/prysm/validator:latest accounts create --keystore-path=/keys --password=example
 ```
 
-The above command will generate an ETH2 account and store it in your local filesystem. The withdrawal key will be in a file titled ``shardwithdrawalkey{xyz...}``. Go ahead and drop it in the ``data`` subfolder, and copy the ``"publickey"`` value into your .env file.
+The above command will generate an ETH2 account and store it in your local filesystem. The withdrawal key will be in a file titled ``shardwithdrawalkey{xyz...}``. Go ahead and drop it in the ``keys`` subfolder, and copy the ``"publickey"`` value into your .env file.
 
 ```
 // .env
@@ -26,7 +26,7 @@ WITHDRAWAL_PUBLIC_KEY={YOUR WITHDRAWAL PUBLIC KEY}
 ```
 
 ### Goerli ETH
-Goerli ETH is the staking asset on [Medalla](https://github.com/goerli/medalla/blob/master/medalla/README.md), which means a Goerli account is required for testing and a Goerli provider URL is needed to interact with the network.
+Goerli ETH is the staking asset on [Medalla](https://github.com/goerli/medalla/blob/master/medalla/README.md), which means a Goerli account is required for testing and a provider URL is needed to interact with the network.
 
 ```
 // .env
@@ -50,13 +50,13 @@ GOERLI_PRIVATE_KEY={YOUR GOERLI PRIVATE KEY}
 
 Next, the address needs to be funded.
 
-The ETH Staker discord ([link](https://discord.gg/eAuDepM)) is fantastic for Medalla testing resources. Select the #request-goerli-eth faucet channel and enter the following message into the chat:
+The ETH Staker discord ([link](https://discord.gg/eAuDepM)) is a fantastic Medalla testing resource. Select the #request-goerli-eth faucet channel and enter the following message into the chat:
 
 ```
 !goerliEth {YOUR GOERLI ADDRESS} 5
 ```
 
-The faucet will send the Goerli ETH required for 5 validators plus gas costs. For additional Goerli ETH or questions please email sam@staked.us.
+The faucet will send enough Goerli ETH for 5 validators plus gas costs. For additional Goerli ETH or questions please email sam@staked.us.
 
 ## Provision Validators
 
@@ -73,6 +73,16 @@ A POST request to [``/provisioning_requests/eth2``](https://staked.gitbook.io/st
 // .env
 VALIDATOR_COUNT=2
 ```
+
+
+To provision validators, run the following commands:
+
+```
+$ docker image build -t staked-eth2 .
+$ docker run --env-file .env staked-eth2 provision
+```
+
+Below is the javascript magic running in the Docker container:
 
 <table>
 <tr>
@@ -136,12 +146,12 @@ async function submitBatchTransactions(validators) {
         deposit_data_roots.push(decoded.deposit_data_root);
     }
     const batching_abi = require("./BatchDeposit.json");
-    const batching_address = "0xD3e5AA84e0E6f4247B3609F88ff157c258E1fE89"
+    const batching_address = "0xD3e5AA84e0E6f4247B3609F88ff157c258E1fE89";
     const batching_contract = new web3.eth.Contract(batching_abi, batching_address);
     try {
         const ether = n => new web3.utils.BN(web3.utils.toWei(n, "ether"));
         const gas_price = await web3.eth.getGasPrice();
-        const gas_price_scalar = 2
+        const gas_price_scalar = 2;
         const tx = await batching_contract.methods.batchDeposit(
             pubkeys,
             withdrawal_credentials,
@@ -167,10 +177,3 @@ async function submitBatchTransactions(validators) {
 </td>
 </tr>
 </table>
-
-To provision validators, as shown above, run the following commands:
-
-```
-$ docker image build -t staked-eth2 .
-$ docker run --env-file .env staked-eth2 provision
-```
