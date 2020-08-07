@@ -26,7 +26,7 @@ The above command will generate an ETH2 account and store it in your local files
 ### Goerli ETH
 Goerli ETH is the staking asset on [Medalla](https://github.com/goerli/medalla/blob/master/medalla/README.md), which means a Goerli account is required for testing. We've added a Goerli provider URL to the .env file - if the provider requests max out, please contact us or replace with your own. 
 
-To generate a Goerli account, run the following commands:
+To generate a Goerli account, run the following commands (sometimes ``sudo`` is required):
 
 ```
 $ docker image build -t staked-eth2 .
@@ -60,7 +60,7 @@ GOERLI_PRIVATE_KEY={YOUR GOERLI PRIVATE KEY}
 
 A POST request to [``/provisioning_requests/eth2``](https://staked.gitbook.io/staked/staking-api/node-provisioning-api#post-provisioning-request) will provision Medalla validators. The .env file is used to configure the validator count for our example scripts, and is set to 5 by default.
 
-To provision validators, run the following commands:
+To provision validators, run the following commands (sometimes ``sudo`` is required):
 
 ```
 $ docker image build -t staked-eth2 .
