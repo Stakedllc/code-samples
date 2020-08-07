@@ -12,6 +12,10 @@ case $action in
     exec npm run provision
   ;;
 
+  status)
+    exec npm run status
+  ;;
+
   *)
     echo "Invalid action: $action"
     exit 1

@@ -5,7 +5,8 @@
   "main": "provision.js",
   "scripts": {
     "account": "node -e 'require(\"./account.js\").create()'",
-    "provision": "node -e 'require(\"./provision.js\").provision()'"
+    "provision": "node -e 'require(\"./provision.js\").provision()'",
+    "status": "node -e 'require(\"./status.js\").status()'"
   },
   "author": "sam@staked.us",
   "license": "ISC",
