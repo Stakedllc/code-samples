@@ -1,4 +1,7 @@
-# ETH2
+# code-samples
+Code samples for integration partners.
+
+# [ETH2](https://github.com/Stakedllc/code-samples/tree/master/eth2)
 
 Provision ETH2 validators on Staked's secure cloud infrastructure.
 
@@ -23,7 +26,7 @@ The above command will generate an ETH2 account and store it in your local files
 ### Goerli ETH
 Goerli ETH is the staking asset on [Medalla](https://github.com/goerli/medalla/blob/master/medalla/README.md), which means a Goerli account is required for testing. We've added a Goerli provider URL to the .env file - if the provider requests max out, please contact us or replace with your own. 
 
-To generate a Goerli account, run the following commands (sometimes ``sudo`` is required):
+To generate a Goerli account, run the following commands:
 
 ```
 $ docker image build -t staked-eth2 .
@@ -57,7 +60,7 @@ GOERLI_PRIVATE_KEY={YOUR GOERLI PRIVATE KEY}
 
 A POST request to [``/provisioning_requests/eth2``](https://staked.gitbook.io/staked/staking-api/node-provisioning-api#post-provisioning-request) will provision Medalla validators. The .env file is used to configure the validator count for our example scripts, and is set to 5 by default.
 
-To provision validators, run the following commands (sometimes ``sudo`` is required):
+To provision validators, run the following commands:
 
 ```
 $ docker image build -t staked-eth2 .
@@ -156,6 +159,53 @@ async function submitBatchTransactions(validators) {
 <tr>
 <td>
   <a href="https://github.com/Stakedllc/code-samples/blob/master/eth2/provision.js#L44">source code</a>
+</td>
+</tr>
+</table>
+
+## Validator Statuses
+
+Validators go through a number of states on the ETH2 chain after initial deposit.
+
+| Status        | Definition  | Time Period  |
+| ------------- |-------------| -----|
+| CREATED      | Deposit is waiting to be seen by ETH2 chain. | 0-6 Hours |
+| PENDING      | Validator is in the queue waiting to go live | 0-6 Days |
+| ACTIVE | Validator is participating and earning rewards      | n / a |
+
+A GET request to the [``/delegations/eth2``](https://staked.gitbook.io/staked/staking-api/node-provisioning-api#post-provisioning-request) endpoint will detail the status and metadata of provisioned validators.
+
+To get the validator statuses, run the following command:
+
+```
+$ docker image build -t staked-eth2 .
+$ docker run --env-file .env staked-eth2 status
+```
+
+<table>
+<tr>
+<td>
+  <pre lang="javascript">
+async function getDelegations() {
+    try {
+        let response = await axios({
+            method: 'get',
+            url: "https://eth2.staging.staked.cloud/api/delegations/eth2",
+            params: {
+                api_key: STAKED_API_KEY
+            }
+        });
+        return response.data.results;
+    } catch (error) {
+        throw error;
+    }
+}
+  </pre>
+</td>
+</tr>
+<tr>
+<td>
+  <a href="https://github.com/Stakedllc/code-samples/blob/master/eth2/status.js#L7">source code</a>
 </td>
 </tr>
 </table>
