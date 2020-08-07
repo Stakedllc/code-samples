@@ -162,3 +162,18 @@ async function submitBatchTransactions(validators) {
 </td>
 </tr>
 </table>
+
+## Validator Status
+
+After the initial deposit goes through, the validator is waiting to go live on the ETH2 chain. Deposits are intially marked as ``CREATED`` and after a number of hours will enter a status of ``PENDING`` - effectively, in line behind other validators to start participating and earning rewards. Finally, once the validator is live and through the queue it will enter a status of ``ACTIVE``.
+
+A GET request to the [``/delegations/eth2``](https://staked.gitbook.io/staked/staking-api/node-provisioning-api#post-provisioning-request) endpoint will detail the status and metadata of provisioned validators.
+
+To get the validator statuses, run the following command (sometimes ``sudo`` is required):
+
+```
+$ docker image build -t staked-eth2 .
+$ docker run --env-file .env staked-eth2 status
+```
+
+The statuses will be printed in the console. Check back to see when the validators go live!
