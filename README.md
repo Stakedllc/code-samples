@@ -38,10 +38,10 @@ This will print the associated address and private key - make sure these stay ac
 The ETH Staker discord ([link](https://discord.gg/eAuDepM)) is a fantastic Medalla testing resource. Select the #request-goerli-eth faucet channel and enter the following message into the chat:
 
 ```
-!goerliEth {YOUR GOERLI ADDRESS} 5
+!goerliEth {YOUR GOERLI ADDRESS}
 ```
 
-The faucet will send enough Goerli ETH for 5 validators (5 * 32 Goerli ETH) plus gas costs.
+The faucet will send enough Goerli ETH for a validators (32 Goerli ETH) plus gas costs.
 
 ## .env
 Fill in the seeded [.env](https://github.com/Stakedllc/code-samples/blob/master/eth2/.env) file with your details from above.
@@ -58,7 +58,7 @@ GOERLI_PRIVATE_KEY={YOUR GOERLI PRIVATE KEY}
 
 ## Provision Validators
 
-A POST request to [``/provisioning_requests/eth2``](https://staked.gitbook.io/staked/staking-api/node-provisioning-api#post-provisioning-request) will provision Medalla validators. The .env file is used to configure the validator count for our example scripts, and is set to 5 by default.
+A POST request to [``/provisioning_requests/eth2``](https://staked.gitbook.io/staked/staking-api/node-provisioning-api#post-provisioning-request) will provision Medalla validators. The .env file is used to configure the validator count for our example scripts, and is set to 1 by default.
 
 To provision validators, run the following commands:
 
