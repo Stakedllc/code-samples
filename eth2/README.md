@@ -21,7 +21,14 @@ For the purposes of this walkthrough, we'll use the prysmatic labs validator ima
 $ docker run -it -v "$PWD:/keys" --network="host" gcr.io/prysmaticlabs/prysm/validator:latest accounts create --keystore-path=/keys --password=example
 ```
 
-The above command will generate an ETH2 account and store it in your local filesystem. The withdrawal key will be in a file titled ``shardwithdrawalkey{xyz...}``. Go ahead and drop it in the ``keys`` subfolder, and delete the ``validatorprivatekey{xyz...}`` file that was generated along with it.
+The above command will generate an ETH2 account and store it in your local filesystem. The withdrawal key will be in a file titled ``shardwithdrawalkey{xyz...}``. 
+
+Move the withdrawal key the ``keys`` subfolder, and delete the ``validatorprivatekey{xyz...}`` file that was generated along with it.
+
+```
+$ mv ./shardwithdrawalkey{xyz...} ./keys/shardwithdrawalkey{xyz...}
+$ rm ./validatorprivatekey{xyz...}
+```
 
 ### Goerli ETH
 Goerli ETH is the staking asset on [Medalla](https://github.com/goerli/medalla/blob/master/medalla/README.md), which means a Goerli account is required for testing. We've added a Goerli provider URL to the .env file - if the provider requests max out, please contact us or replace with your own. 
@@ -41,7 +48,7 @@ The ETH Staker discord ([link](https://discord.gg/eAuDepM)) is a fantastic Medal
 !goerliEth {YOUR GOERLI ADDRESS}
 ```
 
-The faucet will send enough Goerli ETH for a validators (32 Goerli ETH) plus gas costs.
+The faucet will send enough Goerli ETH for a validator (32 Goerli ETH) plus gas costs.
 
 ## .env
 Fill in the seeded [.env](https://github.com/Stakedllc/code-samples/blob/master/eth2/.env) file with your details from above.
