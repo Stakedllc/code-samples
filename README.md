@@ -48,7 +48,7 @@ The ETH Staker discord ([link](https://discord.gg/eAuDepM)) is a fantastic Medal
 !goerliEth {YOUR GOERLI ADDRESS}
 ```
 
-The faucet will send enough Goerli ETH for a validators (32 Goerli ETH) plus gas costs.
+The faucet will send enough Goerli ETH for a validator (32 Goerli ETH) plus gas costs.
 
 ## .env
 Fill in the seeded [.env](https://github.com/Stakedllc/code-samples/blob/master/eth2/.env) file with your details from above.
