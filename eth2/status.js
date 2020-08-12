@@ -49,6 +49,6 @@ module.exports.status = async function () {
         console.log(pending, "Validators PENDING");
         console.log(active, "Validators ACTIVE");
     } catch (error) {
-        console.log(error);
+        throw error;
     }
 }
