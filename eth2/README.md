@@ -56,6 +56,7 @@ STAKED_API_KEY={YOUR STAKED API KEY}
 
 WITHDRAWAL_PUBLIC_KEY={YOUR WITHDRAWAL PUBLIC KEY}
 
+GOERLI_RPC_URL=https://goerli.infura.io/v3/2a987ae2383345918851b8fb958f5203
 GOERLI_ADDRESS={YOUR GOERLI ADDRESS}
 GOERLI_PRIVATE_KEY={YOUR GOERLI PRIVATE KEY}
 ```
@@ -177,7 +178,7 @@ Validators go through a number of states on the ETH2 chain after initial deposit
 | PENDING      | Validator is in the queue waiting to go live | 0-6 Days |
 | ACTIVE | Validator is participating and earning rewards      | n / a |
 
-A GET request to the [``/delegations/eth2``](https://staked.gitbook.io/staked/staking-api/node-provisioning-api#post-provisioning-request) endpoint will detail the status and metadata of provisioned validators.
+A GET request to the [``/delegations/eth2``](https://staked.gitbook.io/staked/staking-api/node-provisioning-api#get-validator-statuses) endpoint will detail the status and metadata of provisioned validators.
 
 To get the validator statuses, run the following command:
 
