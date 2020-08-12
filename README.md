@@ -177,8 +177,9 @@ Validators go through a number of states on the ETH2 chain after initial deposit
 
 | Status        | Definition  | Time Period  |
 | ------------- |-------------| -----|
-| CREATED      | Deposit is waiting to be seen by ETH2 chain. | 0-6 Hours |
-| PENDING      | Validator is in the queue waiting to go live | 0-6 Days |
+| CREATED      | Validator was provisioned through Staked API | n / a |
+| DEPOSITED     | Deposit is waiting to be seen by ETH2 chain. | 0-6 Hours |
+| PENDING      | Validator is in the ETH2 queue waiting to go live | 0-6 Days |
 | ACTIVE | Validator is participating and earning rewards      | n / a |
 
 A GET request to the [``/delegations/eth2``](https://staked.gitbook.io/staked/staking-api/node-provisioning-api#get-validator-statuses) endpoint will detail the status and metadata of provisioned validators.
