@@ -76,7 +76,7 @@ async function submitBatchTransactions(validators) {
             });
         return tx;
     } catch (error) {
-        console.log(error);
+        throw error;
     }
 }
 
@@ -107,6 +107,6 @@ module.exports.provision = async function () {
         const tx = await submitBatchTransactions(validators);
         console.log("etherscan link:", `https://goerli.etherscan.io/tx/${tx.transactionHash}`)
     } catch (error) {
-        console.log(error);
+        throw error;
     }
 }
