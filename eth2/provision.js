@@ -41,6 +41,8 @@ async function postProvisioningRequest() {
     }
 }
 
+module.exports.postProvisioningRequest = postProvisioningRequest;
+
 // Step 2: Batch Staking Transactions
 async function submitBatchTransactions(validators) {
     var pubkeys = [];

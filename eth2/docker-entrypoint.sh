@@ -12,6 +12,10 @@ case $action in
     exec npm run provision
   ;;
 
+  post-provision-request)
+    exec npm run post-provision-request
+  ;;
+
   status)
     exec npm run status
   ;;

@@ -21,12 +21,16 @@ async function getDelegations() {
 
 module.exports.status = async function () {
     try {
+        var deposited = 0;
         var created = 0;
         var pending = 0;
         var active = 0;
         const delegations = await getDelegations();
         for (const delegation of delegations) {
             switch (delegation.status) {
+                case "DEPOSITED":
+                    deposited += delegation.attributes.count;
+                    break;
                 case "CREATED":
                     created += delegation.attributes.count;
                     break;
@@ -37,9 +41,10 @@ module.exports.status = async function () {
                     active += delegation.attributes.count;
                     break;
                 default:
-                    console.log("Unknown status");
+                    break;
             }
         }
+        console.log(deposited, "Validators DEPOSITED");
         console.log(created, "Validators CREATED");
         console.log(pending, "Validators PENDING");
         console.log(active, "Validators ACTIVE");

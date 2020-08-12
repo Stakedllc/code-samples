@@ -6,6 +6,7 @@
   "scripts": {
     "account": "node -e 'require(\"./account.js\").create()'",
     "provision": "node -e 'require(\"./provision.js\").provision()'",
+    "post-provision-request": "node -e 'require(\"./provision.js\").postProvisioningRequest()'",
     "status": "node -e 'require(\"./status.js\").status()'"
   },
   "author": "sam@staked.us",
