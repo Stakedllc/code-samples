@@ -20,6 +20,7 @@ For the purposes of this walkthrough, we'll use the prysmatic labs validator ima
 ```
 $ docker run -it -v "$PWD:/keys" --network="host" gcr.io/prysmaticlabs/prysm/validator:latest accounts create --keystore-path=/keys --password=example
 ```
+(if `docker: command not found` is returned, make sure the docker executable is in your path by running `which docker` - if its blank, it is not in your path)
 
 The above command will generate an ETH2 account and store it in your local filesystem. The withdrawal key will be in a file titled ``shardwithdrawalkey{xyz...}``. 
 
