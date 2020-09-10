@@ -9,11 +9,6 @@ const {
     GOERLI_PRIVATE_KEY,
 } = process.env;
 
-// Set-Up Web3
-const web3 = new Web3(GOERLI_RPC_URL);
-const account = web3.eth.accounts.privateKeyToAccount(GOERLI_PRIVATE_KEY);
-web3.eth.accounts.wallet.add(account);
-
 // Step 1: Post Provisioning Request
 async function postProvisioningRequest() {
     try {
@@ -44,13 +39,13 @@ async function postProvisioningRequest() {
 module.exports.postProvisioningRequest = postProvisioningRequest;
 
 // Step 2: Batch Staking Transactions
-async function submitBatchTransactions(validators) {
+async function submitBatchTransactions(web3, validators) {
     var pubkeys = [];
     var withdrawal_credentials = [];
     var signatures = [];
     var deposit_data_roots = [];
     for (let i = 0; i < validators.length; i++) {
-        let decoded = decodeDepositInput(validators[i].depositInput);
+        let decoded = decodeDepositInput(web3, validators[i].depositInput);
         pubkeys.push(decoded.pubkey);
         withdrawal_credentials.push(decoded.withdrawal_credentials);
         signatures.push(decoded.signature);
@@ -80,7 +75,7 @@ async function submitBatchTransactions(validators) {
     }
 }
 
-function decodeDepositInput(validator_tx) {
+function decodeDepositInput(web3, validator_tx) {
     return web3.eth.abi.decodeParameters([
         {
             "type": "bytes",
@@ -103,8 +98,13 @@ module.exports.provision = async function () {
     try {
         console.log("provisioning validators...")
         const validators = await postProvisioningRequest();
+
+        const web3 = new Web3(GOERLI_RPC_URL);
+        const account = web3.eth.accounts.privateKeyToAccount(GOERLI_PRIVATE_KEY);
+        web3.eth.accounts.wallet.add(account);
+
         console.log("sending batched deposit transaction... (this may take a minute to confirm)")
-        const tx = await submitBatchTransactions(validators);
+        const tx = await submitBatchTransactions(web3, validators);
         console.log("etherscan link:", `https://goerli.etherscan.io/tx/${tx.transactionHash}`)
     } catch (error) {
         throw error;
