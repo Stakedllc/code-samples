@@ -52,7 +52,7 @@ async function submitBatchTransactions(web3, validators) {
         deposit_data_roots.push(decoded.deposit_data_root);
     }
     const batching_abi = require("./BatchDeposit.json");
-    const batching_address = "0xD3e5AA84e0E6f4247B3609F88ff157c258E1fE89"
+    const batching_address = "0x57E01E3f05ebEd69C186BE55dC347490c0B29D93";
     const batching_contract = new web3.eth.Contract(batching_abi, batching_address);
     try {
         const ether = n => new web3.utils.BN(web3.utils.toWei(n, "ether"));
