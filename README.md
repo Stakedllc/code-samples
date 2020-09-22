@@ -32,7 +32,7 @@ $ rm ./validatorprivatekey{xyz...}
 ```
 
 ### Goerli ETH
-Goerli ETH is the staking asset on [Medalla](https://github.com/goerli/medalla/blob/master/medalla/README.md), which means a Goerli account is required for testing. We've added a Goerli provider URL to the .env file - if the provider requests max out, please contact us or replace with your own. 
+Goerli ETH is the staking asset on [Medalla](https://github.com/goerli/medalla/blob/master/medalla/README.md) (and [Spadina](https://github.com/goerli/medalla/tree/master/spadina)), which means a Goerli account is required for testing. We've added a Goerli provider URL to the .env file - if the provider requests max out, please contact us or replace with your own. 
 
 To generate a Goerli account, run the following commands:
 
@@ -43,7 +43,7 @@ $ docker run --env-file .env staked-eth2 account
 
 This will print the associated address and private key - make sure these stay accessible. Next, the address needs to be funded.
 
-The ETH Staker discord ([link](https://discord.gg/eAuDepM)) is a fantastic Medalla testing resource. Select the #request-goerli-eth faucet channel and enter the following message into the chat:
+The ETH Staker discord ([link](https://discord.gg/eAuDepM)) is a fantastic testing resource. Select the #request-goerli-eth faucet channel and enter the following message into the chat:
 
 ```
 !goerliEth {YOUR GOERLI ADDRESS}
@@ -67,9 +67,9 @@ GOERLI_PRIVATE_KEY={YOUR GOERLI PRIVATE KEY}
 
 ## Provision Validators
 
-A POST request to [``/provisioning_requests/eth2``](https://staked.gitbook.io/staked/staking-api/node-provisioning-api#post-provisioning-request) will provision Medalla validators. The .env file is used to configure the validator count for our example scripts, and is set to 1 by default.
+A POST request to [``/provisioning_requests/eth2``](https://staked.gitbook.io/staked/staking-api/node-provisioning-api#post-provisioning-request) will provision ETH2 validators. The .env file is used to configure the validator count for our example scripts, and is set to 1 by default.
 
-To provision validators, run the following commands:
+To provision validators (on the [Spadina](https://blog.ethereum.org/2020/09/14/eth2-quick-update-no-16/#spadina-dress-rehearsal-just-around-the-corner) testnet), run the following commands:
 
 ```
 $ docker image build -t staked-eth2 .
@@ -140,7 +140,7 @@ async function submitBatchTransactions(validators) {
         deposit_data_roots.push(decoded.deposit_data_root);
     }
     const batching_abi = require("./BatchDeposit.json");
-    const batching_address = "0xD3e5AA84e0E6f4247B3609F88ff157c258E1fE89";
+    const batching_address = "0x57E01E3f05ebEd69C186BE55dC347490c0B29D93";
     const batching_contract = new web3.eth.Contract(batching_abi, batching_address);
     try {
         const ether = n => new web3.utils.BN(web3.utils.toWei(n, "ether"));
