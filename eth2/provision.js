@@ -10,7 +10,7 @@ const {
 } = process.env;
 
 // Step 1: Post Provisioning Request
-async function postProvisioningRequest() {
+async function postProvisioningRequest(num_validators) {
     try {
         let response = await axios({
             method: 'post',
@@ -24,7 +24,7 @@ async function postProvisioningRequest() {
                     "validators": [
                         {
                             "provider": "decentralized",
-                            "count": Number(VALIDATOR_COUNT)
+                            "count": num_validators
                         }
                     ]
                 }
@@ -52,7 +52,7 @@ async function submitBatchTransactions(web3, validators) {
         deposit_data_roots.push(decoded.deposit_data_root);
     }
     const batching_abi = require("./BatchDeposit.json");
-    const batching_address = "0x57E01E3f05ebEd69C186BE55dC347490c0B29D93";
+    const batching_address = "0xD3e5AA84e0E6f4247B3609F88ff157c258E1fE89";
     const batching_contract = new web3.eth.Contract(batching_abi, batching_address);
     try {
         const ether = n => new web3.utils.BN(web3.utils.toWei(n, "ether"));
@@ -94,19 +94,36 @@ function decodeDepositInput(web3, validator_tx) {
     );
 }
 
-module.exports.provision = async function () {
+async function launch(web3, num_validators) {
     try {
-        console.log("provisioning validators...")
-        const validators = await postProvisioningRequest();
-
-        const web3 = new Web3(GOERLI_RPC_URL);
-        const account = web3.eth.accounts.privateKeyToAccount(GOERLI_PRIVATE_KEY);
-        web3.eth.accounts.wallet.add(account);
+        console.log(`provisioning ${num_validators} validators...`);
+        const validators = await postProvisioningRequest(num_validators);
 
         console.log("sending batched deposit transaction... (this may take a minute to confirm)")
         const tx = await submitBatchTransactions(web3, validators);
         console.log("etherscan link:", `https://goerli.etherscan.io/tx/${tx.transactionHash}`)
     } catch (error) {
         throw error;
+    }
+}
+
+module.exports.provision = async function () {
+    const web3 = new Web3(GOERLI_RPC_URL);
+    const account = web3.eth.accounts.privateKeyToAccount(GOERLI_PRIVATE_KEY);
+    web3.eth.accounts.wallet.add(account);
+
+    let max_validators_per_batch = 20;
+    if (Number(VALIDATOR_COUNT) <= max_validators_per_batch) {
+        await launch(web3, Number(VALIDATOR_COUNT));
+    } else {
+        let i, provisioned = 0;
+        while (provisioned < Number(VALIDATOR_COUNT)) {
+            console.log(`batch number ${i}`);
+            let remaining = (Number(VALIDATOR_COUNT) - provisioned);
+            let num_validators = remaining > 20 ? 20 : remaining;
+            await launch(web3, num_validators);
+            provisioned += num_validators;
+            i++;
+        }
     }
 }
