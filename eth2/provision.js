@@ -116,7 +116,8 @@ module.exports.provision = async function () {
     if (Number(VALIDATOR_COUNT) <= max_validators_per_batch) {
         await launch(web3, Number(VALIDATOR_COUNT));
     } else {
-        let i, provisioned = 0;
+        let i = 0;
+        let provisioned = 0;
         while (provisioned < Number(VALIDATOR_COUNT)) {
             console.log(`batch number ${i}`);
             let remaining = (Number(VALIDATOR_COUNT) - provisioned);
