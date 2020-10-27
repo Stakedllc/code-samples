@@ -8,7 +8,7 @@ async function getDelegations() {
     try {
         let response = await axios({
             method: 'get',
-            url: "https://eth2.staging.staked.cloud/api/delegations/eth2",
+            url: "https://testnet.staked.cloud/api/delegations/eth2",
             params: {
                 api_key: STAKED_API_KEY
             }
