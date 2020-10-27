@@ -32,7 +32,7 @@ $ rm ./validatorprivatekey{xyz...}
 ```
 
 ### Goerli ETH
-Goerli ETH is the staking asset on [Medalla](https://github.com/goerli/medalla/blob/master/medalla/README.md) (and [Spadina](https://github.com/goerli/medalla/tree/master/spadina)), which means a Goerli account is required for testing. We've added a Goerli provider URL to the .env file - if the provider requests max out, please contact us or replace with your own. 
+Goerli ETH is the staking asset on [Medalla](https://github.com/goerli/medalla/blob/master/medalla/README.md), which means a Goerli account is required for testing. We've added a Goerli provider URL to the .env file - if the provider requests max out, please contact us or replace with your own. 
 
 To generate a Goerli account, run the following commands:
 
@@ -58,18 +58,21 @@ Fill in the seeded [.env](https://github.com/Stakedllc/code-samples/blob/master/
 // .env
 STAKED_API_KEY={YOUR STAKED API KEY}
 
+VALIDATOR_COUNT={Seed value set to 5}
 WITHDRAWAL_PUBLIC_KEY={YOUR WITHDRAWAL PUBLIC KEY}
 
-GOERLI_RPC_URL=https://goerli.infura.io/v3/2a987ae2383345918851b8fb958f5203
+GOERLI_RPC_URL={URL provided, or use your own}
 GOERLI_ADDRESS={YOUR GOERLI ADDRESS}
 GOERLI_PRIVATE_KEY={YOUR GOERLI PRIVATE KEY}
+
+GAS_PRICE_SCALAR=2
 ```
 
 ## Provision Validators
 
 A POST request to [``/provisioning_requests/eth2``](https://staked.gitbook.io/staked/staking-api/node-provisioning-api#post-provisioning-request) will provision ETH2 validators. The .env file is used to configure the validator count for our example scripts, and is set to 1 by default.
 
-To provision validators (on the [Spadina](https://blog.ethereum.org/2020/09/14/eth2-quick-update-no-16/#spadina-dress-rehearsal-just-around-the-corner) testnet), run the following commands:
+To provision validators on the Medalla testnet, run the following commands:
 
 ```
 $ docker image build -t staked-eth2 .
@@ -83,11 +86,11 @@ Below is the javascript magic running in the Docker container:
 <td>
   <pre lang="javascript">
 // Step 1: Post Provisioning Request
-async function postProvisioningRequest() {
+async function postProvisioningRequest(num_validators) {
     try {
         let response = await axios({
             method: 'post',
-            url: "https://eth2.staging.staked.cloud/api/provisioning_requests/eth2",
+            url: "https://testnet.staked.cloud/api/provisioning_requests/eth2",
             params: {
                 api_key: STAKED_API_KEY
             },
@@ -97,7 +100,7 @@ async function postProvisioningRequest() {
                     "validators": [
                         {
                             "provider": "decentralized",
-                            "count": Number(VALIDATOR_COUNT)
+                            "count": num_validators
                         }
                     ]
                 }
@@ -113,7 +116,7 @@ async function postProvisioningRequest() {
 </tr>
 <tr>
 <td>
-  <a href="https://github.com/Stakedllc/code-samples/blob/master/eth2/provision.js#L17">source code</a>
+  <a href="https://github.com/Stakedllc/code-samples/blob/master/eth2/provision.js#L20">source code</a>
 </td>
 </tr>
 </table>
@@ -127,39 +130,49 @@ Each deposit transaction is decoded to create an array of input values to the ba
 <td>
   <pre lang="javascript">
 // Step 2: Batch Staking Transactions
-async function submitBatchTransactions(validators) {
+async function submitBatchTransactions(web3, validators) {
+    /*
+        Each validator object contains encoded transaction data 
+        to sign and send to the canonical ETH2 deposit contract.
+        To use the batching contract, this data must be decoded
+        and constructed in a batch.
+    */
     var pubkeys = [];
     var withdrawal_credentials = [];
     var signatures = [];
     var deposit_data_roots = [];
     for (let i = 0; i < validators.length; i++) {
-        let decoded = decodeDepositInput(validators[i].depositInput);
+        let decoded = decodeDepositInput(web3, validators[i].depositInput);
         pubkeys.push(decoded.pubkey);
         withdrawal_credentials.push(decoded.withdrawal_credentials);
         signatures.push(decoded.signature);
         deposit_data_roots.push(decoded.deposit_data_root);
     }
+    /*
+        After decoding the information for each validator, the 
+        transaction to the batching contract must be constructed
+        and sent.
+    */
     const batching_abi = require("./BatchDeposit.json");
-    const batching_address = "0x57E01E3f05ebEd69C186BE55dC347490c0B29D93";
+    const batching_address = "0x730Ce54f821499ef3656d8E3Ff4763567FF1402F";
     const batching_contract = new web3.eth.Contract(batching_abi, batching_address);
     try {
         const ether = n => new web3.utils.BN(web3.utils.toWei(n, "ether"));
         const gas_price = await web3.eth.getGasPrice();
-        const gas_price_scalar = 2;
         const tx = await batching_contract.methods.batchDeposit(
             pubkeys,
             withdrawal_credentials,
             signatures,
-            deposit_data_roots)
-            .send({
-                from: web3.eth.accounts.wallet[0].address,
-                value: ether(web3.utils.toBN(32 * validators.length)),
-                gasPrice: gas_price * gas_price_scalar,
-                gas: 7999999
-            });
+            deposit_data_roots
+        ).send({
+            from: web3.eth.accounts.wallet[0].address,
+            value: ether(web3.utils.toBN(32 * validators.length)),
+            gasPrice: gas_price * GAS_PRICE_SCALAR,
+            gas: 21000 + (64000 * validators.length)
+        });
         return tx;
     } catch (error) {
-        console.log(error);
+        throw error;
     }
 }
   </pre>
@@ -167,7 +180,7 @@ async function submitBatchTransactions(validators) {
 </tr>
 <tr>
 <td>
-  <a href="https://github.com/Stakedllc/code-samples/blob/master/eth2/provision.js#L44">source code</a>
+  <a href="https://github.com/Stakedllc/code-samples/blob/master/eth2/provision.js#L46">source code</a>
 </td>
 </tr>
 </table>
@@ -200,7 +213,7 @@ async function getDelegations() {
     try {
         let response = await axios({
             method: 'get',
-            url: "https://eth2.staging.staked.cloud/api/delegations/eth2",
+            url: "https://testnet.staked.cloud/api/delegations/eth2",
             params: {
                 api_key: STAKED_API_KEY
             }
