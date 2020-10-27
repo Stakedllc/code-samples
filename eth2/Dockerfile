@@ -1,4 +1,4 @@
-FROM node:latest
+FROM node:12-stretch-slim
 
 COPY package.json .
 RUN npm install
