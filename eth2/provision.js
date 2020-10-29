@@ -23,44 +23,37 @@ module.exports.provision = async function () {
 }
 
 async function createValidators(num_validators) {
-
-    let max_validators_per_call = 5; // Throttling validators per request is recommended
-
-    let validators = [];
-    while (validators.length < num_validators) {
-        let remaining = num_validators - validators.length;
-        let create = remaining > max_validators_per_call ? max_validators_per_call : remaining;
-        try {
-            const request_data = await postProvisioningRequest(create);
-            console.log("provisionging request uuid", request_data.uuid);
-            /*
-                 Each provisioning request returns a unique identifier which is used to
-                 poll for the status of provisioned validators. When Staked has created
-                 a validator, it will be added to the response.
-            */
-            let total_pages = 0;
-            let completed = 0;
-            while (completed != create) {
-                await new Promise(resolve => setTimeout(resolve, 10000));
-                let poll_request = await pollProvisioningRequest(request_data.uuid);
-                total_pages = poll_request.pages;
-                completed = poll_request.total;
-            }
-            /*
-                  Once the provisioning request has successfully filled all validators,
-                  grab the validator objects.
-            */
-            let page = 1;
-            while (page <= total_pages) {
-                const poll_request = await pollProvisioningRequest(request_data.uuid, page);
-                validators = validators.concat(poll_request.results);
-                page += 1;
-            }
-        } catch (error) {
-            throw error;
+    try {
+        const request_data = await postProvisioningRequest(num_validators);
+        console.log("provisionging request uuid", request_data.uuid);
+        /*
+             Each provisioning request returns a unique identifier which is used to
+             poll for the status of provisioned validators. When Staked has created
+             a validator, it will be added to the response.
+        */
+        let total_pages = 0;
+        let completed = 0;
+        while (completed != create) {
+            await new Promise(resolve => setTimeout(resolve, 10000));
+            let poll_request = await pollProvisioningRequest(request_data.uuid);
+            total_pages = poll_request.pages;
+            completed = poll_request.total;
         }
+        /*
+              Once the provisioning request has successfully filled all validators,
+              grab the validator objects.
+        */
+        let validators = []
+        let page = 1;
+        while (page <= total_pages) {
+            const poll_request = await pollProvisioningRequest(request_data.uuid, page);
+            validators = validators.concat(poll_request.results);
+            page += 1;
+        }
+        return validators;
+    } catch (error) {
+        throw error;
     }
-    return validators;
 }
 
 async function postProvisioningRequest(num_validators) {
