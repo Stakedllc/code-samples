@@ -33,7 +33,7 @@ async function createValidators(num_validators) {
         */
         let total_pages = 0;
         let completed = 0;
-        while (completed != create) {
+        while (completed != num_validators) {
             await new Promise(resolve => setTimeout(resolve, 10000));
             let poll_request = await pollProvisioningRequest(request_data.uuid);
             total_pages = poll_request.pages;
