@@ -25,7 +25,7 @@ module.exports.provision = async function () {
 async function createValidators(num_validators) {
     try {
         const request_data = await postProvisioningRequest(num_validators);
-        console.log("provisionging request uuid", request_data.uuid);
+        console.log("provisioning request uuid", request_data.uuid);
         /*
              Each provisioning request returns a unique identifier which is used to
              poll for the status of provisioned validators. When Staked has created
