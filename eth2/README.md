@@ -12,24 +12,10 @@ An API key with ETH2 permissions is required to provision validators - please em
 ### Generate a Withdrawal Key
 An ETH2 withdrawal key is required to control stake on ETH2, and can be used for many validators.
 
-For the purposes of this walkthrough, we'll use the prysmatic labs validator image to generate a withdrawal key. [Docker](https://docs.docker.com/get-docker/) needs to be installed, then run the following command:
-
-```
-$ docker run -it -v "$PWD:/keys" --network="host" gcr.io/prysmaticlabs/prysm/validator:latest accounts create --keystore-path=/keys --password=example
-```
-(if `docker: command not found` is returned, make sure the docker executable is in your path by running `which docker` - if its blank, it is not in your path)
-
-The above command will generate an ETH2 account and store it in your local filesystem. The withdrawal key will be in a file titled ``shardwithdrawalkey{xyz...}``. 
-
-Move the withdrawal key the ``keys`` subfolder, and delete the ``validatorprivatekey{xyz...}`` file that was generated along with it.
-
-```
-$ mv ./shardwithdrawalkey{xyz...} ./keys/shardwithdrawalkey{xyz...}
-$ rm ./validatorprivatekey{xyz...}
-```
+Follow our [guide](https://staked.us/faq/eth2/#withdrawal-address) to generate a withdrawal key which be can used in testing.
 
 ### Goerli ETH
-Goerli ETH is the staking asset on [Medalla](https://github.com/goerli/medalla/blob/master/medalla/README.md), which means a Goerli account is required for testing. We've added a Goerli provider URL to the .env file - if the provider requests max out, please contact us or replace with your own. 
+Goerli ETH is the staking asset on ETH2 testnets, which means a Goerli account is required for testing. We've added a Goerli provider URL to the .env file - if the provider requests max out, please contact us or replace with your own. 
 
 To generate a Goerli account, run the following commands:
 
