@@ -29,6 +29,14 @@ The faucet will send enough Goerli ETH for a validator (32 Goerli ETH) plus gas 
 
 ## Provision Validators, Get Associated Delegation Objects, and Deposit
 
-With an `api_key`, `withdrawal_public_key`, `goerli_rpc_url`, and `goerli_private_key`, you use the `code-samples` CLI tool to provision validators on Pyrmont.
+With an `api_key`, `withdrawal_public_key`, `goerli_rpc_url`, and `goerli_private_key`, you can use the `code-samples` CLI tool to provision validators on Pyrmont.
 
-In the ETH2 folder, run `npm run stake`!
+In the ETH2 folder, run:
+```
+npm install
+```
+
+```
+npm run stake
+```
+
