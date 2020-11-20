@@ -3,7 +3,7 @@ const axios = require("axios");
 module.exports.pollDelegationObjects = async function (
   network,
   api_key,
-  request_uuid,
+  provision_uuid,
   num_validators
 ) {
   /*
@@ -22,7 +22,7 @@ module.exports.pollDelegationObjects = async function (
       let delegations_response = await getDelegationObjects(
         network,
         api_key,
-        request_uuid
+        provision_uuid
       );
       total = delegations_response.total;
       pages = delegations_response.pages;
@@ -40,7 +40,8 @@ module.exports.pollDelegationObjects = async function (
     try {
       const delegations_response = await getDelegationObjects(
         network,
-        request_uuid,
+        api_key,
+        provision_uuid,
         page
       );
       delegations = delegations.concat(delegations_response.results);

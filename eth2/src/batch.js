@@ -1,4 +1,9 @@
-async function batchDeposits(web3, delegations) {
+module.exports.batchDeposits = async function batchDeposits(
+  network,
+  web3,
+  gas_price_scalar,
+  delegations
+) {
   /*
       The batching contract can handle a maximum (safe limit)
       of 185 deposits per transaction. This is due to the gas
@@ -13,22 +18,25 @@ async function batchDeposits(web3, delegations) {
     let batch =
       remaining > max_deposits_per_tx ? max_deposits_per_tx : remaining;
     try {
-      const batch_tx = await submitBatchTransaction(
+      let batch_tx = await submitBatchTransaction(
+        network,
         web3,
+        gas_price_scalar,
         delegations.slice(deposited, deposited + batch)
-      );
-      console.log(
-        "etherscan link:",
-        `https://goerli.etherscan.io/tx/${batch_tx.transactionHash}`
       );
       deposited += batch;
     } catch (error) {
       throw error;
     }
   }
-}
+};
 
-async function submitBatchTransaction(web3, delegations) {
+async function submitBatchTransaction(
+  network,
+  web3,
+  gas_price_scalar,
+  delegations
+) {
   /*
         Each delegation object contains encoded transaction data 
         to sign and send to the canonical ETH2 deposit contract.
@@ -53,10 +61,11 @@ async function submitBatchTransaction(web3, delegations) {
         After decoding the information on each delegation object, construct
         the transaction to the batching contract.
     */
-  const batching_abi = require("../eth2/BatchDeposit.json");
+  const batching_abi = require("./contracts/BatchDeposit.json");
+  const batching_address = getBatchAddress(network);
   const batching_contract = new web3.eth.Contract(
     batching_abi,
-    BATCHING_CONTRACT_ADDRESS
+    batching_address
   );
   try {
     const ether = (n) => new web3.utils.BN(web3.utils.toWei(n, "ether"));
@@ -71,12 +80,23 @@ async function submitBatchTransaction(web3, delegations) {
       .send({
         from: web3.eth.accounts.wallet[0].address,
         value: ether(web3.utils.toBN(32 * delegations.length)),
-        gasPrice: gas_price * GAS_PRICE_SCALAR,
+        gasPrice: gas_price * gas_price_scalar,
         gas: 21000 + 64000 * delegations.length,
       });
     return tx;
   } catch (error) {
     throw error;
+  }
+}
+
+function getBatchAddress(network) {
+  switch (network) {
+    case "testnet":
+      return "0x061e6993baFD5858242a4A10b757c870Eb2A8041";
+    case "dev-testnet":
+      return "0x061e6993baFD5858242a4A10b757c870Eb2A8041";
+    default:
+      throw error;
   }
 }
 

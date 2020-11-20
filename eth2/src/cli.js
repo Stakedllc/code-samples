@@ -37,11 +37,32 @@ const provision_prompts = [
   },
 ];
 
-const web3_prompts = [
+const batch_prompts = [
   {
     type: "input",
     name: "rpc_url",
     message: "Please enter your ETH1 RPC url",
+  },
+  {
+    type: "list",
+    name: "gas_speed_scalar",
+    message: "Select the gas speed",
+    choices: ["Fast", "Normal"],
+    filter: function (speed) {
+      switch (speed) {
+        case "Fast":
+          return 1.25;
+        case "Normal":
+          return 1.1;
+        default:
+          throw error;
+      }
+    },
+  },
+  {
+    type: "input",
+    name: "eth1_address",
+    message: "Please enter your ETH1 address",
   },
   {
     type: "password",
@@ -55,16 +76,16 @@ async function provision(config) {
   try {
     const spinner = ora("Posting Provisioning Request").start();
     try {
-      let request_data = await provisionAPI.postProvisioningRequest(
+      let provision_data = await provisionAPI.postProvisioningRequest(
         config["network"],
         config["api_key"],
         config["withdrawal_public_key"],
         config["num_validators"]
       );
       spinner.succeed(
-        `Success. Provisioning Request UUID: ${request_data.uuid}`
+        `Success. Provisioning Request UUID: ${provision_data.uuid}`
       );
-      return request_data.uuid;
+      return provision_data.uuid;
     } catch (error) {
       spinner.fail(`Request failed`);
       throw error;
@@ -81,11 +102,10 @@ async function delegations(config) {
       let delegations_data = await delegationsAPI.pollDelegationObjects(
         config["network"],
         config["api_key"],
-        config["request_uuid"],
+        config["provision_uuid"],
         config["num_validators"]
       );
       spinner.succeed(`Success. Received all delegation objects.`);
-      console.log(delegations_data);
       return delegations_data;
     } catch (error) {
       spinner.fail(`Request failed`);
@@ -103,10 +123,19 @@ async function batch(config) {
       config["eth1_private_key"]
     );
     try {
-      const spinner = ora("Sending Batch Transaction/s").start();
+      const spinner = ora(
+        `Sending Batch Transaction/s - https://goerli.etherscan.io/address/${config["eth1_address"]}`
+      ).start();
       try {
-        await batchAPI.batchDeposits(web3, config["delegations"]);
-        spinner.succeed(`Success. Transactions confirmed.`);
+        await batchAPI.batchDeposits(
+          config["network"],
+          web3,
+          config["gas_price_scalar"],
+          config["delegations"]
+        );
+        spinner.succeed(
+          `Success. Transactions confirmed - https://goerli.etherscan.io/address/${config["eth1_address"]}`
+        );
         return;
       } catch (error) {
         spinner.fail(`Batch transaction/s failed`);
@@ -122,31 +151,25 @@ async function batch(config) {
 
 module.exports.stake = async function () {
   try {
-    let api_config = await inquirer.prompt(api_prompts);
+    let config = await inquirer.prompt(
+      api_prompts.concat(provision_prompts, batch_prompts)
+    );
     try {
-      let provision_config = await inquirer.prompt(provision_prompts);
-      let provision_uuid = await provision({
-        ...api_config,
-        ...provision_config,
-      });
+      let provision_uuid = await provision(config);
       try {
-        let delegations_config = {
-          ...api_config,
+        let delegations_data = await delegations({
+          ...config,
           ...{
-            request_uuid: provision_uuid,
-            num_validators: provision_config["num_validators"],
+            provision_uuid: provision_uuid,
           },
-        };
-        let delegations_data = await delegations(delegations_config);
+        });
         try {
-          let web3_config = await inquirer.prompt(web3_prompts);
-          let batch_config = {
-            ...web3_config,
+          await batch({
+            ...config,
             ...{
               delegations: delegations_data,
             },
-          };
-          await batch(batch_config);
+          });
         } catch (error) {
           throw error;
         }
