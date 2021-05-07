@@ -39,4 +39,3 @@ npm install
 ```
 npm run stake
 ```
-
